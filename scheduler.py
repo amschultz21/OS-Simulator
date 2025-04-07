@@ -1,3 +1,5 @@
+# --- scheduler.py ---
+
 from queue import Queue, PriorityQueue
 import time
 import multiprocessing
@@ -12,7 +14,7 @@ class Scheduler:
 
     def add_job(self, job):
         if self.algorithm == 'SJF':
-            self.queue.put((job.burst_time, job))
+            self.queue.put((job.burst_time, job.job_id, job))  # Tiebreaker with job_id
         else:
             self.queue.put(job)
 
@@ -20,7 +22,7 @@ class Scheduler:
         if self.queue.empty():
             return None
         if self.algorithm == 'SJF':
-            return self.queue.get()[1]
+            return self.queue.get()[2]  # Extract the Job object
         return self.queue.get()
 
     def run(self, memory_manager):
